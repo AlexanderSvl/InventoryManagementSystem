@@ -11,7 +11,3 @@ A straightforward Inventory Management System designed for small businesses and 
 1. Clone the repository: ``git clone https://github.com/your-username/InventoryManagementSystem.git``
 2. Set up your local environment and dependencies.
 3. Run the application and start managing your inventory!
-
-
-Set up your local environment and dependencies.<br />
-Run the application and start managing your inventory!
