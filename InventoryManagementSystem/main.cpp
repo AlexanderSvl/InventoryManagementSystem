@@ -14,6 +14,7 @@
 
 using namespace std;
 int counter = 0;
+float balance = 0.00;
 
 const char* boldCode = "\033[1m";
 const char* greenCode = "\033[32m";
@@ -27,14 +28,6 @@ int main() {
 	vector<Supplier> suppliers;
 	vector<Contract> contracts;
 
-	/*cout << generateID() << endl;
-	std::chrono::seconds duration(2);
-	std::this_thread::sleep_for(duration);
-	cout << generateID() << endl;
-	std::chrono::seconds duration(2);
-	std::this_thread::sleep_for(duration);	cout << generateID() << endl;
-	cout << generateID() << endl;*/
-
 	cout << "|======| Inventory system |======|" << endl;
 	cout << "\n  |==|  1 - Add product";
 	cout << "\n  |==|  2 - Add supplier";
@@ -42,6 +35,7 @@ int main() {
 	cout << "\n  |==|  4 - Display suppliers";
 	cout << "\n  |==|  5 - Display all products of a supplier";
 	cout << "\n  |==|  6 - Display contract of a supplier";
+	cout << "\n  |==|  7 - Edit contract of a supplier";
 	cout << "\n  |==|  0 - Exit the program\n\n";
 
 	int option;
@@ -75,7 +69,7 @@ int main() {
 			break;
 		}
 		case 2: {
-			string ID, name, email, phoneNumber, contractID, startingDate, expirationDate;
+			string ID, name, email, phoneNumber, contractID, startingDate, expirationDate, contractTerms;
 
 			ID = generateID();
 			contractID = generateID();
@@ -96,11 +90,14 @@ int main() {
 			cout << "\nEnter contract starting date: (DD/MM/YYYY) ";
 			getline(cin, startingDate);
 
-			cout << "\nEnter contract expiration date: (DD/MM/YYYY) ";
-			getline(cin, expirationDate);
+			cout << "\nEnter contract starting date: (DD/MM/YYYY) ";
+			getline(cin, startingDate);
+
+			cout << "\nEnter contract terms: ";
+			getline(cin, contractTerms);
 
 			suppliers.push_back(Supplier(ID, name, email, phoneNumber, contractID));
-			contracts.push_back(Contract(contractID, startingDate, expirationDate, ID));
+			contracts.push_back(Contract(contractID, startingDate, expirationDate, contractTerms, ID));
 			break;
 		}
 		case 3: {
@@ -204,7 +201,53 @@ int main() {
 
 			break;
 		}
+		case 7: {
+			string supplierID;
+			cout << "\nSupplier ID: ";
+			cin.ignore();
+			getline(cin, supplierID);
 
+			auto it = std::find_if(suppliers.begin(), suppliers.end(), [supplierID](const Supplier supplier) {
+				return supplier.getID() == supplierID;
+				});
+
+			if (it != suppliers.end()) {
+				const Supplier supplier = *it;
+				string IDToSearchFor = supplier.getSupplierContractID();
+
+				auto itt = std::find_if(contracts.begin(), contracts.end(), [IDToSearchFor](const Contract& contract) {
+					return contract.getID() == IDToSearchFor;
+					});
+
+				if (itt != contracts.end()) {
+					string newStartingDate, newExpirationDate, newContractTerms;
+
+					cout << "\nNew contract starting date: ";
+					getline(cin, newStartingDate);
+
+					cout << "\nNew contract expiration date: ";
+					getline(cin, newExpirationDate);
+
+					cout << "\nNew contract terms: ";
+					getline(cin, newContractTerms);
+
+					itt->setStartingDate(newStartingDate);
+					itt->setExpirationDate(newExpirationDate);
+					itt->setContractTerms(newContractTerms);
+
+					cout << "\nUpdated contract information:\n";
+					itt->printContractInfo();
+				}
+				else {
+					cout << "Contract not found for supplier with ID: " << supplier.getID() << std::endl;
+				}
+			}
+			else {
+				cout << "\nNo supplier with ID #" << supplierID << " found!\n";
+			}
+
+			break;
+		}
 		}
 
 		cout << redCode << boldCode << "\nChoose an option: " << resetCode;

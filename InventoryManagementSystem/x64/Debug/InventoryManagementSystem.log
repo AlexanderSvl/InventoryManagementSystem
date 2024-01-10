@@ -1,2 +1,3 @@
-﻿  Contract.cpp
+﻿  main.cpp
+C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\InventoryManagementSystem\main.cpp(56,12): warning C4129: 'G': unrecognized character escape sequence
   InventoryManagementSystem.vcxproj -> C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\x64\Debug\InventoryManagementSystem.exe
