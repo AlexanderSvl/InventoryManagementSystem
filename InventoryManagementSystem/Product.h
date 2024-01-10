@@ -22,10 +22,9 @@ public:
     void setProductPrice(float newPrice) { productPrice = newPrice; }
 
     // Other functions
-    float calculatePriceWithVAT(float VAT);
+    float calculatePriceWithVAT(float finalPrice, float VAT);
     void printProductInfo() const;
-    float calculatePriceWithDiscount(float discount);
-    float calculateTotalPrice();
+    float calculatePriceWithDiscount(float totalPrice, float discount);
 
     // Operators
     bool operator==(const Product& other) const {

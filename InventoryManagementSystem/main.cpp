@@ -29,14 +29,20 @@ int main() {
 	vector<Contract> contracts;
 
 	cout << "|======| Inventory system |======|" << endl;
-	cout << "\n  |==|  1 - Add product";
-	cout << "\n  |==|  2 - Add supplier";
-	cout << "\n  |==|  3 - Display products";
-	cout << "\n  |==|  4 - Display suppliers";
-	cout << "\n  |==|  5 - Display all products of a supplier";
-	cout << "\n  |==|  6 - Display contract of a supplier";
-	cout << "\n  |==|  7 - Edit contract of a supplier";
-	cout << "\n  |==|  0 - Exit the program\n\n";
+	cout << "\n  |==|   0 - Exit the program";
+	cout << "\n  |==|   1 - Add product";
+	cout << "\n  |==|   2 - Add supplier (contract included)";
+	cout << "\n  |==|   3 - Display products";
+	cout << "\n  |==|   4 - Display suppliers";
+	cout << "\n  |==|   5 - Display all products of a supplier";
+	cout << "\n  |==|   6 - Display contract of a supplier";
+	cout << "\n  |==|   7 - Edit contract of a supplier";
+	cout << "\n  |==|   8 - Edit supplier information";
+	cout << "\n  |==|   9 - Edit product information";
+	cout << "\n  |==|  10 - Sell product";
+	cout << "\n  |==|  11 - Remove supplier";
+	cout << "\n  |==|  12 - Remove product";
+	cout << "\n  |==|  13 - Show balance\n\n";
 
 	int option;
 	cout << redCode << boldCode << "\nChoose an option: " << resetCode;
@@ -117,22 +123,27 @@ int main() {
 			break;
 		}
 		case 4: {
-			for (Supplier supplier : suppliers) {
-				string id = supplier.getSupplierContractID();
+			if (!suppliers.empty()) {
+				for (Supplier supplier : suppliers) {
+					string id = supplier.getSupplierContractID();
 
-				auto it = std::find_if(contracts.begin(), contracts.end(), [id](const Contract contract) {
-					return contract.getID() == id;
-					});
-					
-				if (it != contracts.end()) {
-					const Contract& foundContract = *it;
-					cout << "\n";
-					supplier.printSupplierInfo(foundContract);
-					cout << "\n";
+					auto it = std::find_if(contracts.begin(), contracts.end(), [id](const Contract contract) {
+						return contract.getID() == id;
+						});
+
+					if (it != contracts.end()) {
+						const Contract& foundContract = *it;
+						cout << "\n";
+						supplier.printSupplierInfo(foundContract);
+						cout << "\n";
+					}
+					else {
+						cout << "Contract not found for supplier with ID: " << supplier.getID() << std::endl;
+					}
 				}
-				else {
-					cout << "Contract not found for supplier with ID: " << supplier.getID() << std::endl;
-				}
+			}
+			else {
+				cout << "\nNo product to print info for.\n";
 			}
 
 			break;
@@ -209,7 +220,7 @@ int main() {
 
 			auto it = std::find_if(suppliers.begin(), suppliers.end(), [supplierID](const Supplier supplier) {
 				return supplier.getID() == supplierID;
-				});
+			});
 
 			if (it != suppliers.end()) {
 				const Supplier supplier = *it;
@@ -244,6 +255,159 @@ int main() {
 			}
 			else {
 				cout << "\nNo supplier with ID #" << supplierID << " found!\n";
+			}
+
+			break;
+		}
+		case 8: {
+			string supplierID;
+			cout << "\nSupplier ID: ";
+			cin.ignore();
+			getline(cin, supplierID);
+
+			auto it = std::find_if(suppliers.begin(), suppliers.end(), [supplierID](const Supplier supplier) {
+				return supplier.getID() == supplierID;
+			});
+
+			if (it != suppliers.end()) {
+				string newName, newEmail, newPhoneNumber;
+
+				cout << "\nNew supplier name: ";
+				getline(cin, newName);
+
+				cout << "\nNew supplier email: ";
+				getline(cin, newEmail);
+
+				cout << "\nNew supplier phone number: ";
+				getline(cin, newPhoneNumber);
+
+				it->setSupplierName(newName);
+				it->setSupplierEmail(newEmail);
+				it->setSupplierPhoneNumber(newPhoneNumber);
+			}
+			else {
+				cout << "\nNo supplier with ID #" << supplierID << " found!\n";
+			}
+
+			break;
+		}
+		case 9: {
+			string productID;
+			cout << "\Product ID: ";
+			cin.ignore();
+			getline(cin, productID);
+
+			auto it = std::find_if(products.begin(), products.end(), [productID](const Product product) {
+				return product.getID() == productID;
+			});
+
+			if (it != products.end()) {
+				string newName;
+				int newQuantity;
+				float newPrice;
+
+				cout << "\nNew product name: ";
+				getline(cin, newName);
+
+				cout << "\nNew product quantity: ";
+				cin >> newQuantity;
+
+				cout << "\nNew productPrice: ";
+				cin >> newPrice;
+
+				it->setProductName(newName);
+				it->setProductQuantity(newQuantity);
+				it->setProductPrice(newPrice);
+			}
+			else {
+				cout << "\nNo product with ID #" << productID << " found!\n";
+			}
+
+			break;
+		}
+		case 10: {
+			string productID;
+			cout << "\nProduct ID: ";
+			cin.ignore();
+			getline(cin, productID);
+
+			auto it = std::find_if(products.begin(), products.end(), [productID](const Product product) {
+				return product.getID() == productID;
+				});
+
+			if (it != products.end()) {
+				int quantityToSell;
+				float VAT;
+				float discount;
+
+				cout << "\nQuantity to sell: ";
+				cin >> quantityToSell;
+
+				if (it->getProductQuantity() - quantityToSell >= 0) {
+					cout << "\nVAT (0-100): ";
+					cin >> VAT;
+
+					cout << "\nDiscount (0-100): ";
+					cin >> discount;
+
+					float totalSellingPrice = quantityToSell * it->getProductPrice();
+					float totalSellingPriceWithDiscount = it->calculatePriceWithDiscount(totalSellingPrice, discount);
+					float totalSellingPriceWithVAT = it->calculatePriceWithVAT(totalSellingPriceWithDiscount, VAT);
+
+					balance += totalSellingPriceWithVAT;
+
+					cout << "\nID: " << productID << "\nSold quantity: " << quantityToSell
+						<< "\nTotal selling price (including discount and VAT): " << std::fixed
+						<< std::setprecision(2) << totalSellingPriceWithVAT << endl;
+
+					it->setProductQuantity(it->getProductQuantity() - quantityToSell);
+				}
+				else {
+					cout << "\nNot enough quantity of product with ID: " << productID << " available.";
+				}
+			}
+			else {
+				cout << "\nNo product with ID #" << productID << " found!\n";
+			}
+
+			break;
+		}
+		case 11: {
+			string supplierID;
+			cout << "\nSupplier ID: ";
+			cin.ignore();
+			getline(cin, supplierID);
+
+			auto it = std::find_if(suppliers.begin(), suppliers.end(), [supplierID](const Supplier& supplier) {
+				return supplier.getID() == supplierID;
+				});
+
+			if (it != suppliers.end()) {
+				suppliers.erase(it);
+				std::cout << "Supplier with ID #" << supplierID << " removed.\n";
+			}
+			else {
+				cout << "\nNo supplier with ID #" << supplierID << " found!\n";
+			}
+
+			break;
+		}
+		case 12: {
+			string productID;
+			cout << "\nProduct ID: ";
+			cin.ignore();
+			getline(cin, productID);
+
+			auto it = std::find_if(products.begin(), products.end(), [productID](const Product& product) {
+				return product.getID() == productID;
+				});
+
+			if (it != products.end()) {
+				products.erase(it);
+				std::cout << "Product with ID #" << productID << " removed.\n";
+			}
+			else {
+				std::cout << "No product with ID #" << productID << " found!\n";
 			}
 
 			break;

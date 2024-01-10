@@ -32,10 +32,15 @@ public:
     void displayAllProducts();
     void printSupplierInfo(Contract contract);
 
+    // Operators
+    bool operator==(const Supplier& other) const {
+        return this->getID() == other.getID();
+    }
+
     // Destructor
     ~Supplier() = default;
 private:
-	const string ID;
+	string ID;
 	string supplierName;
 	string supplierEmail;
 	string supplierPhoneNumber;

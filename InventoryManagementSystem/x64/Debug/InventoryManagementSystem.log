@@ -1,3 +1,7 @@
 ﻿  main.cpp
-C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\InventoryManagementSystem\main.cpp(56,12): warning C4129: 'G': unrecognized character escape sequence
+C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\InventoryManagementSystem\main.cpp(62,12): warning C4129: 'G': unrecognized character escape sequence
+C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\InventoryManagementSystem\main.cpp(291,12): warning C4129: 'P': unrecognized character escape sequence
+C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\InventoryManagementSystem\main.cpp(391,12): warning C4129: 'P': unrecognized character escape sequence
+  Supplier.cpp
+  Generating Code...
   InventoryManagementSystem.vcxproj -> C:\Users\User\Desktop\Coding\C++\InventoryManagementSystem\x64\Debug\InventoryManagementSystem.exe
