@@ -412,6 +412,9 @@ int main() {
 
 			break;
 		}
+		case 13: {
+			cout << "\nBalance: " << boldCode << greenCode << balance << resetCode;
+		}
 		}
 
 		cout << redCode << boldCode << "\nChoose an option: " << resetCode;
